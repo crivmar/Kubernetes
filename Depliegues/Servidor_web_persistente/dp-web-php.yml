@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web
+  labels:
+    app: apache
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: apache
+  template:
+    metadata:
+      labels:
+        app: apache
+    spec:
+      volumes:
+        - name: vol-web
+          persistentVolumeClaim:
+            claimName: pvc-webserver
+      containers:
+        - name: apache-php
+          image: php:7.4-apache
+          ports:
+            - name: http-server
+              containerPort: 80
+          volumeMounts:
+            - mountPath: "/var/www/html"
+              name: vol-web
